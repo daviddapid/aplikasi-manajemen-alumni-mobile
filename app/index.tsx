@@ -3,19 +3,28 @@ import { Card } from "@/components/Card";
 import { Container } from "@/components/Container";
 import { Row } from "@/components/Row";
 import { Spacing } from "@/components/Spacing";
-import { Text } from "@/components/Text";
 import { TextInput } from "@/components/TextInput";
+import { AlumniCard } from "@/features/alumni/components/AlumniCard";
+import { useAlumnis } from "@/features/alumni/hooks/useAlumnis";
 import { theme } from "@/theme";
 import Entypo from "@expo/vector-icons/Entypo";
 import { router } from "expo-router";
-import { FlatList } from "react-native";
+import { ActivityIndicator, FlatList } from "react-native";
 
 export default function IndexPage() {
+	const { data: alumnis, refetch, fetchNextPage, isFetchingNextPage } = useAlumnis();
+
 	return (
 		<Container>
 			<Card style={{ borderRadius: 0, boxShadow: theme.shadows.sm, zIndex: 2 }}>
 				<Row gap={8}>
-					<Button trailing={<Entypo name="plus" color={"white"} size={15} />}>Tambah Alumni</Button>
+					<Button
+						trailing={
+							<Entypo name="plus" color={"white"} size={15} onPress={() => router.push("/create")} />
+						}
+					>
+						Tambah Alumni
+					</Button>
 					<Button
 						onPress={() => router.push("/chart")}
 						variant="secondary"
@@ -30,15 +39,16 @@ export default function IndexPage() {
 				</Row>
 			</Card>
 			<FlatList
+				onRefresh={refetch}
+				onEndReached={() => fetchNextPage()}
+				refreshing={isFetchingNextPage}
 				contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 14 }}
-				data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+				data={alumnis}
 				ItemSeparatorComponent={() => <Spacing vertical={4} />}
-				renderItem={() => (
-					<Card style={theme.borders.base}>
-						<Text style={{ fontWeight: "bold", fontSize: theme.fontSizes.md }}>Sarah Olivia</Text>
-						<Text style={{ marginTop: theme.spaces.sm }}>IT, Fullstack Dev at PT. Bangkrut</Text>
-					</Card>
+				renderItem={({ item }) => (
+					<AlumniCard name={item.nama} info={item.tempat_kerja ?? item.tempat_kuliah ?? "-"} />
 				)}
+				ListFooterComponent={() => isFetchingNextPage ?? <ActivityIndicator size={"large"} color={"black"} />}
 			/>
 		</Container>
 	);
