@@ -12,10 +12,10 @@ import { theme } from "@/theme";
 import { spaces } from "@/theme/layout";
 import Entypo from "@expo/vector-icons/Entypo";
 import { router } from "expo-router";
-import { ActivityIndicator, FlatList } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 
 export default function IndexPage() {
-	const { alumnis, search, setSearch, fetchAlumnis, loading, isFetchingMore, loadMore, isDebouncing } = useAlumnis();
+	const { alumnis, fetchAlumnis, loading, isFetchingMore, loadMore, isDebouncing, setQuery } = useAlumnis();
 
 	return (
 		<Container>
@@ -35,17 +35,31 @@ export default function IndexPage() {
 						Lihat Grafik
 					</Button>
 				</Row>
-				<Row gap={10} style={{ marginTop: theme.spaces.xl }}>
-					<TextInput
-						label="Cari Alumni"
-						placeholder="Nama/Tempat Kerja/Tempat Kuliah..."
-						onChangeText={setSearch}
-						value={search}
-					/>
-					<TextInput label="Angkatan" className="flex-1" />
-				</Row>
+				<View style={{ marginTop: theme.spaces.xl, gap: theme.spaces.md }}>
+					<Text>Cari Alumni</Text>
+					<Row gap={10} enableScroll>
+						<TextInput
+							inputStyle={{ minWidth: 210 }}
+							placeholder="Nama/Tempat Kerja/Kuliah..."
+							onChangeText={(val) => setQuery((prev) => ({ ...prev, search: val }))}
+						/>
+						<TextInput
+							inputStyle={{ minWidth: 100 }}
+							placeholder="tahun masuk"
+							keyboardType="numeric"
+							onChangeText={(val) => setQuery((prev) => ({ ...prev, tahunMulai: val }))}
+						/>
+						<TextInput
+							inputStyle={{ minWidth: 100 }}
+							placeholder="tahun lulus"
+							keyboardType="numeric"
+							onChangeText={(val) => setQuery((prev) => ({ ...prev, tahunLulus: val }))}
+						/>
+					</Row>
+				</View>
 			</Card>
 			<FlatList
+				initialNumToRender={10}
 				onRefresh={fetchAlumnis}
 				onEndReached={loadMore}
 				refreshing={loading}
@@ -54,6 +68,7 @@ export default function IndexPage() {
 				ItemSeparatorComponent={() => <Spacing vertical={4} />}
 				renderItem={({ item }) => <AlumniCard alumni={item} />}
 				ListHeaderComponent={() =>
+					!loading &&
 					isDebouncing && (
 						<Text style={{ marginBottom: spaces.lg, textAlign: "center" }}>sedang mencari...</Text>
 					)
@@ -61,7 +76,7 @@ export default function IndexPage() {
 				ListFooterComponent={() =>
 					isFetchingMore && <ActivityIndicator color={"black"} style={{ marginTop: spaces.lg }} />
 				}
-				ListEmptyComponent={() => <Badge text="Tidak ada data" />}
+				ListEmptyComponent={() => !loading && <Badge text="Tidak ada data" />}
 			/>
 		</Container>
 	);

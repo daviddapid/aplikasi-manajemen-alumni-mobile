@@ -1,21 +1,23 @@
 import { theme } from "@/theme";
-import { TextInput as RNTextInput, StyleSheet, View } from "react-native";
+import { KeyboardTypeOptions, TextInput as RNTextInput, StyleProp, StyleSheet, TextStyle, View } from "react-native";
 import { Text } from "./Text";
 
 type Props = {
 	label?: string;
 	placeholder?: string;
-	className?: string;
 	onChangeText?: (text: string) => void;
 	value?: string;
+	keyboardType?: KeyboardTypeOptions;
+	inputStyle?: StyleProp<TextStyle>;
 };
 
 export const TextInput = (props: Props) => {
 	return (
-		<View className={props.className}>
+		<View>
 			{props.label && <Text style={styles.label}>{props.label}</Text>}
 			<RNTextInput
-				style={styles.input}
+				keyboardType={props.keyboardType}
+				style={[styles.input, props.inputStyle]}
 				placeholder={props.placeholder}
 				value={props.value}
 				onChangeText={props.onChangeText}

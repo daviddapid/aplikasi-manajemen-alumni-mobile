@@ -3,11 +3,23 @@ import { Links, Meta } from "@/types/pagination";
 import { Alumni } from "../types/Alumni";
 
 type GetAllAlumnis = { data: Alumni[] } & Links & Meta;
-export async function getAllAlumnis({ search, cursor }: { search?: string; cursor?: string | null }) {
+export async function getAllAlumnis({
+	search,
+	tahunMulai,
+	tahunLulus,
+	cursor,
+}: {
+	search?: string;
+	cursor?: string | null;
+	tahunMulai?: string | null;
+	tahunLulus?: string | null;
+}) {
 	try {
 		const query = new URLSearchParams();
 		if (cursor) query.append("cursor", cursor);
 		if (search) query.append("search", search);
+		if (tahunMulai) query.append("tahun_mulai", tahunMulai);
+		if (tahunLulus) query.append("tahun_lulus", tahunLulus);
 
 		const { data } = await Api.get<GetAllAlumnis>(`alumnis?${query.toString()}`);
 
