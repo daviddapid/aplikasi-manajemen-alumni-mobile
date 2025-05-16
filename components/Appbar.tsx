@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		position: "relative",
 		boxShadow: theme.shadows.sm,
+		zIndex: 3,
 	},
 	title: {
 		fontSize: theme.fontSizes.lg,

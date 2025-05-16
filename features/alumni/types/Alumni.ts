@@ -1,8 +1,20 @@
 export type Alumni = {
+	id: number;
 	nama: string;
-	jabatan_kerja: string | null;
-	photo: string | null;
-	prodi_kuliah: string | null;
+	tgl_lahir: string;
+	tahun_mulai: string;
+	tahun_lulus: string;
+	no_tlp: string;
+	email: string;
+	alamat: string;
+	jurusan: string;
 	tempat_kerja: string | null;
+	jabatan_kerja: string | null;
 	tempat_kuliah: string | null;
+	prodi_kuliah: string | null;
+	kesesuaian_kerja: boolean | null;
+	kesesuaian_kuliah: boolean | null;
+	photo: string | null;
+	created_at?: Date;
+	updated_at?: Date;
 };

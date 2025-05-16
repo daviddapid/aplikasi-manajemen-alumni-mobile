@@ -9,11 +9,12 @@ export default function RootLayout() {
 	return (
 		<>
 			<QueryClientProvider client={queryClient}>
-				<Stack screenOptions={{ headerShown: false }}>
+				<Stack screenOptions={{ headerShown: false, animation: "slide_from_right" }}>
 					<Stack.Screen name="sign-in" />
 					<Stack.Screen name="index" />
 					<Stack.Screen name="create" />
 					<Stack.Screen name="chart" />
+					<Stack.Screen name="detail/[id]" />
 				</Stack>
 			</QueryClientProvider>
 			<StatusBar style="light" backgroundColor="white" />

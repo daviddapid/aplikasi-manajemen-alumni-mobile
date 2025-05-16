@@ -6,13 +6,20 @@ type Props = {
 	label?: string;
 	placeholder?: string;
 	className?: string;
+	onChangeText?: (text: string) => void;
+	value?: string;
 };
 
 export const TextInput = (props: Props) => {
 	return (
 		<View className={props.className}>
 			{props.label && <Text style={styles.label}>{props.label}</Text>}
-			<RNTextInput style={styles.input} placeholder={props.placeholder} />
+			<RNTextInput
+				style={styles.input}
+				placeholder={props.placeholder}
+				value={props.value}
+				onChangeText={props.onChangeText}
+			/>
 		</View>
 	);
 };

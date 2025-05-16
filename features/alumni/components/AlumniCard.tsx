@@ -2,22 +2,28 @@ import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
 import { theme } from "@/theme";
 import { Image } from "expo-image";
-import { StyleSheet, View } from "react-native";
+import { router } from "expo-router";
+import { useMemo } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alumni } from "../types/Alumni";
 
 type Props = {
-	name: string;
-	info: string;
+	alumni: Alumni;
 };
 
-export const AlumniCard = (props: Props) => {
+export const AlumniCard = ({ alumni }: Props) => {
+	const info = useMemo(() => alumni.tempat_kerja ?? alumni.tempat_kuliah, [alumni]);
+
 	return (
-		<Card style={styles.card}>
-			<Image style={styles.avatar} />
-			<View>
-				<Text style={{ fontWeight: "bold", fontSize: theme.fontSizes.md }}>{props.name}</Text>
-				<Text style={{ marginTop: theme.spaces.sm }}>{props.info}</Text>
-			</View>
-		</Card>
+		<TouchableOpacity onPress={() => router.push(`/detail/${alumni.id}`)}>
+			<Card style={styles.card}>
+				<Image style={styles.avatar} />
+				<View>
+					<Text style={{ fontWeight: "bold", fontSize: theme.fontSizes.md }}>{alumni.nama}</Text>
+					<Text style={{ marginTop: theme.spaces.sm }}>{info ?? "-"}</Text>
+				</View>
+			</Card>
+		</TouchableOpacity>
 	);
 };
 
