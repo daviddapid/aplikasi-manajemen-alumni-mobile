@@ -48,6 +48,10 @@ export const useAlumnis = () => {
 		}
 	}
 
+	function resetQuery() {
+		setQuery({});
+	}
+
 	return {
 		alumnis,
 		fetchAlumnis,
@@ -57,5 +61,6 @@ export const useAlumnis = () => {
 		isDebouncing,
 		setQuery,
 		query,
+		resetQuery,
 	};
 };

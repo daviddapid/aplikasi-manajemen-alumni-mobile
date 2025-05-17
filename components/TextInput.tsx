@@ -1,5 +1,13 @@
 import { theme } from "@/theme";
-import { KeyboardTypeOptions, TextInput as RNTextInput, StyleProp, StyleSheet, TextStyle, View } from "react-native";
+import {
+	KeyboardTypeOptions,
+	TextInput as RNTextInput,
+	StyleProp,
+	StyleSheet,
+	TextStyle,
+	View,
+	ViewStyle,
+} from "react-native";
 import { Text } from "./Text";
 
 type Props = {
@@ -9,11 +17,12 @@ type Props = {
 	value?: string;
 	keyboardType?: KeyboardTypeOptions;
 	inputStyle?: StyleProp<TextStyle>;
+	containerStyle?: StyleProp<ViewStyle>;
 };
 
 export const TextInput = (props: Props) => {
 	return (
-		<View>
+		<View style={props.containerStyle}>
 			{props.label && <Text style={styles.label}>{props.label}</Text>}
 			<RNTextInput
 				keyboardType={props.keyboardType}

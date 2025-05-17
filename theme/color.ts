@@ -5,6 +5,7 @@ interface ColorsToken {
 	red: string;
 	gray: string;
 	white: string;
+	black: string;
 }
 
 export const colors: ColorsToken = {
@@ -14,4 +15,5 @@ export const colors: ColorsToken = {
 	white: "#FFFF",
 	gray: "#DFDFDF",
 	softPrimary: "#E8F7FF",
+	black: "#00000",
 };

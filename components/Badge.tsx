@@ -1,17 +1,19 @@
 import { theme } from "@/theme";
-import { MaterialIcons } from "@expo/vector-icons";
+import { JSX } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "./Text";
 
 type Props = {
 	text: string;
+	trailing?: JSX.Element;
+	leading?: JSX.Element;
 };
 
 export const Badge = (props: Props) => {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.text}>{props.text}</Text>
-			<MaterialIcons name="info" color={theme.colors.primary} size={20} />
+			{props.trailing}
 		</View>
 	);
 };
@@ -28,5 +30,5 @@ const styles = StyleSheet.create({
 		gap: 10,
 		justifyContent: "center",
 	},
-	text: { color: theme.colors.primary, fontWeight: "bold", fontSize: theme.fontSizes.md },
+	text: { color: theme.colors.primary, fontSize: theme.fontSizes.md },
 });

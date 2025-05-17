@@ -10,19 +10,21 @@ import { AlumniCard } from "@/features/alumni/components/AlumniCard";
 import { useAlumnis } from "@/features/alumni/hooks/useAlumnis";
 import { theme } from "@/theme";
 import { spaces } from "@/theme/layout";
+import { MaterialIcons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { router } from "expo-router";
 import { ActivityIndicator, FlatList, View } from "react-native";
 
 export default function IndexPage() {
-	const { alumnis, fetchAlumnis, loading, isFetchingMore, loadMore, isDebouncing, setQuery } = useAlumnis();
+	const { alumnis, fetchAlumnis, loading, isFetchingMore, loadMore, isDebouncing, setQuery, resetQuery, query } =
+		useAlumnis();
 
 	return (
 		<Container>
-			<Card style={{ borderRadius: 0, boxShadow: theme.shadows.sm, zIndex: 2 }}>
-				<Row gap={8}>
+			<Card style={{ borderRadius: 0, boxShadow: theme.shadows.sm, zIndex: 2, paddingHorizontal: 0 }}>
+				<Row gap={8} enableScroll style={{ paddingHorizontal: 15 }}>
 					<Button
-						onPress={() => router.push("/create/step1")}
+						onPress={() => router.push("/create")}
 						trailing={<Entypo name="plus" color={"white"} size={15} />}
 					>
 						Tambah Alumni
@@ -34,26 +36,32 @@ export default function IndexPage() {
 					>
 						Lihat Grafik
 					</Button>
+					<Button variant="gray" onPress={resetQuery} trailing={<MaterialIcons name="history" size={15} />}>
+						Reset Filter
+					</Button>
 				</Row>
 				<View style={{ marginTop: theme.spaces.xl, gap: theme.spaces.md }}>
-					<Text>Cari Alumni</Text>
-					<Row gap={10} enableScroll>
+					<Text style={{ marginLeft: 15 }}>Cari Alumni</Text>
+					<Row gap={10} enableScroll style={{ paddingHorizontal: 15 }}>
 						<TextInput
 							inputStyle={{ minWidth: 210 }}
 							placeholder="Nama/Tempat Kerja/Kuliah..."
 							onChangeText={(val) => setQuery((prev) => ({ ...prev, search: val }))}
+							value={query?.search}
 						/>
 						<TextInput
 							inputStyle={{ minWidth: 100 }}
 							placeholder="tahun masuk"
 							keyboardType="numeric"
 							onChangeText={(val) => setQuery((prev) => ({ ...prev, tahunMulai: val }))}
+							value={query?.tahunMulai}
 						/>
 						<TextInput
 							inputStyle={{ minWidth: 100 }}
 							placeholder="tahun lulus"
 							keyboardType="numeric"
 							onChangeText={(val) => setQuery((prev) => ({ ...prev, tahunLulus: val }))}
+							value={query?.tahunLulus}
 						/>
 					</Row>
 				</View>
