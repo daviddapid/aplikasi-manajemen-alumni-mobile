@@ -1,8 +1,9 @@
 import { theme } from "@/theme";
+import { ReactNode } from "react";
 import { Text as RNText, StyleProp, StyleSheet, TextStyle } from "react-native";
 
 type Props = {
-	children: string;
+	children: ReactNode;
 	style?: StyleProp<TextStyle>;
 };
 
