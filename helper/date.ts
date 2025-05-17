@@ -6,3 +6,7 @@ export function formatDateToText(date: Date): string {
 	};
 	return date.toLocaleDateString("id-ID", options);
 }
+
+export function formatDateFromString(date: string): string {
+	return formatDateToText(new Date(date));
+}
