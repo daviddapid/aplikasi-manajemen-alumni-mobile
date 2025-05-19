@@ -18,6 +18,7 @@ type Props = {
 	keyboardType?: KeyboardTypeOptions;
 	inputStyle?: StyleProp<TextStyle>;
 	containerStyle?: StyleProp<ViewStyle>;
+	errorMessage?: string;
 };
 
 export const TextInput = (props: Props) => {
@@ -26,11 +27,14 @@ export const TextInput = (props: Props) => {
 			{props.label && <Text style={styles.label}>{props.label}</Text>}
 			<RNTextInput
 				keyboardType={props.keyboardType}
-				style={[styles.input, props.inputStyle]}
+				style={[styles.input, props.inputStyle, props.errorMessage && { borderColor: theme.colors.red }]}
 				placeholder={props.placeholder}
 				value={props.value}
 				onChangeText={props.onChangeText}
 			/>
+			{props.errorMessage && (
+				<Text style={{ color: theme.colors.red, marginTop: theme.spaces.sm }}>{props.errorMessage}</Text>
+			)}
 		</View>
 	);
 };

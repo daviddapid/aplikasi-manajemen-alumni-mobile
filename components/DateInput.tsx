@@ -22,6 +22,7 @@ type Props = {
 	keyboardType?: KeyboardTypeOptions;
 	inputStyle?: StyleProp<TextStyle>;
 	containerStyle?: StyleProp<ViewStyle>;
+	errorMessage?: string;
 };
 
 export const DateInput = (props: Props) => {
@@ -40,11 +41,20 @@ export const DateInput = (props: Props) => {
 				{props.label && <Text style={styles.label}>{props.label}</Text>}
 				<TouchableOpacity onPress={() => setIsShowDatePicker(true)}>
 					<RNTextInput
-						style={[styles.input, props.inputStyle]}
+						style={[
+							styles.input,
+							props.inputStyle,
+							props.errorMessage && { borderColor: theme.colors.red },
+						]}
 						placeholder={props.placeholder}
 						value={props.value && formatDateToText(props.value)}
 						readOnly
 					/>
+					{props.errorMessage && (
+						<Text style={{ color: theme.colors.red, marginTop: theme.spaces.sm }}>
+							{props.errorMessage}
+						</Text>
+					)}
 				</TouchableOpacity>
 			</View>
 			{isShowDatePicker && (

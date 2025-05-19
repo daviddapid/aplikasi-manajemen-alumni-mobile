@@ -9,7 +9,7 @@ import { View } from "react-native";
 
 export default function SigninPage() {
 	async function handleSignIn() {
-		router.replace("/");
+		router.replace("/alumni");
 	}
 	return (
 		<Container>
@@ -19,6 +19,7 @@ export default function SigninPage() {
 					marginHorizontal: "auto",
 					marginVertical: "auto",
 					paddingVertical: 20,
+					boxShadow: theme.shadows.sm,
 				}}
 			>
 				<Text
