@@ -1,23 +1,28 @@
+import store from "@/redux/store";
+import { theme } from "@/theme";
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+import { StatusBar } from "react-native";
+import { Provider as ReduxProvider } from "react-redux";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
+// SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
 	return (
 		<>
-			<QueryClientProvider client={queryClient}>
-				<Stack screenOptions={{ headerShown: false, animation: "slide_from_right" }}>
-					<Stack.Screen name="sign-in" />
-					<Stack.Screen name="(tabs)" />
-					<Stack.Screen name="create" />
-					<Stack.Screen name="chart" />
-					<Stack.Screen name="detail/[id]" />
+			<ReduxProvider store={store}>
+				<Stack
+					screenOptions={{
+						headerShown: false,
+						animation: "slide_from_right",
+						navigationBarColor: theme.colors.primary,
+					}}
+				>
+					<Stack.Screen name="index" />
+					<Stack.Screen name="auth" />
+					<Stack.Screen name="guest" />
 				</Stack>
-			</QueryClientProvider>
-			<StatusBar style="light" backgroundColor="white" />
+			</ReduxProvider>
+			<StatusBar backgroundColor={theme.colors.primary} barStyle={"light-content"} />
 		</>
 	);
 }

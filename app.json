@@ -4,7 +4,7 @@
     "slug": "aplikasi-manajemen-alumni-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/native/adaptive-icon.png",
     "scheme": "aplikasimanajemenalumnimobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
