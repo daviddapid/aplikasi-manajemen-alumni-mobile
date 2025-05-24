@@ -91,5 +91,5 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 	},
-	text: { fontWeight: "semibold", marginHorizontal: "auto" },
+	text: { fontWeight: "bold", marginHorizontal: "auto" },
 });
