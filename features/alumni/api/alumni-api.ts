@@ -44,8 +44,7 @@ export async function getDetailAlumni(id: number | string) {
 
 export async function checkEmailExist(email: string) {
 	try {
-		const { data } = await Api.post("check-email-exist", { email });
-		console.log(data);
+		const { data } = await Api.post<PostCreateAlumni>("check-email-exist", { email });
 
 		return data;
 	} catch (error: any) {
@@ -53,9 +52,11 @@ export async function checkEmailExist(email: string) {
 	}
 }
 
+type PostCreateAlumni = Response<Alumni>;
 export async function createAlumni(createAlumniDTO: CreateAlumniDTO) {
 	try {
-		await Api.post("alumnis", createAlumniDTO);
+		const { data } = await Api.post<PostCreateAlumni>("alumnis", createAlumniDTO);
+		return data;
 	} catch (error) {
 		console.log({ error });
 	}

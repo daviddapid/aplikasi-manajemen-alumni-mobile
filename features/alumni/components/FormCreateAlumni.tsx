@@ -7,7 +7,12 @@ import { JSX, useRef, useState } from "react";
 import { RegisterOptions, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
+import { formatDateToMySQLDateTime } from "@/helper/date";
+import { router } from "expo-router";
 import PagerView from "react-native-pager-view";
+import Toast from "react-native-toast-message";
+import { createAlumni } from "../api/alumni-api";
+import { CreateAlumniDTO } from "../types/CreateAlumniDTO";
 import { Step1Form, Step1FormValues } from "./FormSteps/Step1Form";
 import { Step2Form, Step2FormValues } from "./FormSteps/Step2Form";
 import { Step3Form, Step3FormValues } from "./FormSteps/Step3Form";
@@ -29,16 +34,30 @@ export const FormCreateAlumni = () => {
 	} satisfies RegisterOptions;
 
 	const handleSubmit = async () => {
-		console.log(step1.getValues("tgl_lahir"));
-
-		const dto = {
+		const dto: CreateAlumniDTO = {
 			...step1.getValues(),
 			...step2.getValues(),
 			...step3.getValues(),
 			...step4.getValues(),
-			jurusan_id: 1,
+			tgl_lahir: formatDateToMySQLDateTime(step1.getValues("tgl_lahir")),
 		};
 		console.log(dto);
+
+		const res = await createAlumni(dto);
+		if (res?.status === "fail") {
+			Toast.show({
+				type: "error",
+				text1: res.message,
+			});
+			return;
+		}
+
+		Toast.show({
+			type: "success",
+			text1: res?.message,
+		});
+
+		return router.replace("/auth/alumni");
 
 		// createAlumni(dto);
 	};

@@ -10,8 +10,8 @@ export type CreateAlumniDTO = {
 	jabatan_kerja?: string | undefined;
 	tempat_kuliah?: string | undefined;
 	prodi_kuliah?: string | undefined;
-	kesesuaian_kerja?: string | undefined;
-	kesesuaian_kuliah?: string | undefined;
+	kesesuaian_kerja?: boolean | undefined;
+	kesesuaian_kuliah?: boolean | undefined;
 	photo?: string | undefined;
-	jurusan_id: number;
+	jurusan_id: string;
 };

@@ -30,6 +30,7 @@ export const DateInput = (props: Props) => {
 
 	function onChange(event: DateTimePickerEvent, selectedDate?: Date) {
 		setIsShowDatePicker(false);
+
 		if (selectedDate) {
 			props.onChangeDate(selectedDate);
 		}

@@ -54,7 +54,6 @@ export const Step1Form = ({ form, validation, stepsRef, currentStep }: StepForm1
 							value={value}
 							onChangeDate={(date) => {
 								onChange(date);
-								console.log(date);
 							}}
 							errorMessage={form.formState.errors.nama?.message}
 						/>
