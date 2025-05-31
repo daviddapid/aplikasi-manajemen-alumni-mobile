@@ -6,11 +6,14 @@ type Props = {
 	children: ReactNode;
 	horizontal?: number;
 	vertical?: number;
+	flexGap?: number;
 };
 
 export const Padding = memo(
-	({ horizontal = theme.paddings.horizontal, vertical = theme.paddings.vertical, children }: Props) => {
-		return <View style={{ paddingHorizontal: horizontal, paddingVertical: vertical }}>{children}</View>;
+	({ horizontal = theme.paddings.horizontal, vertical = theme.paddings.vertical, children, flexGap }: Props) => {
+		return (
+			<View style={{ paddingHorizontal: horizontal, paddingVertical: vertical, gap: flexGap }}>{children}</View>
+		);
 	}
 );
 Padding.displayName = "Padding";

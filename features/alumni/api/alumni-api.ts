@@ -1,7 +1,7 @@
 import { Api } from "@/config/api";
 import { Response } from "@/types/Response";
 import { Alumni } from "../types/Alumni";
-import { CreateAlumniDTO } from "../types/CreateAlumniDTO";
+import { CreateAlumniDTO, UpdateAlumniDTO } from "../types/AlumniDTO";
 
 type GetAllAlumnis = Response<Alumni[]>;
 export async function getAllAlumnis({
@@ -30,8 +30,8 @@ export async function getAllAlumnis({
 	}
 }
 
-type GetDetailAlumni = { data: Alumni };
-export async function getDetailAlumni(id: number | string) {
+type GetDetailAlumni = Response<Alumni>;
+export async function getDetailAlumni(id: number | string | string[]) {
 	try {
 		const { data } = await Api.get<GetDetailAlumni>(`alumnis/${id}`);
 
@@ -59,5 +59,15 @@ export async function createAlumni(createAlumniDTO: CreateAlumniDTO) {
 		return data;
 	} catch (error) {
 		console.log({ error });
+	}
+}
+
+type PutUpdateAlumni = Response<Alumni>;
+export async function updateAlumni(id: number, updateAlumniDTO: UpdateAlumniDTO) {
+	try {
+		const { data } = await Api.put<PutUpdateAlumni>(`alumnis/${id}`, updateAlumniDTO);
+		return data;
+	} catch (error) {
+		console.log(error);
 	}
 }

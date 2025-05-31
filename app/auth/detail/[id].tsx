@@ -1,41 +1,317 @@
+import { Appbar } from "@/components/Appbar";
+import { Button } from "@/components/Button";
+import { Card } from "@/components/Card";
+import { Container } from "@/components/Container";
+import { DateInput } from "@/components/DateInput";
+import { InputWrapper } from "@/components/InputWrapper";
+import { Padding } from "@/components/Padding";
+import { Row } from "@/components/Row";
+import { Text } from "@/components/Text";
+import { TextInput } from "@/components/TextInput";
+import { getDetailAlumni, updateAlumni } from "@/features/alumni/api/alumni-api";
+import { Step1FormValues } from "@/features/alumni/components/FormSteps/Step1Form";
+import { Step2FormValues } from "@/features/alumni/components/FormSteps/Step2Form";
+import { Step3FormValues } from "@/features/alumni/components/FormSteps/Step3Form";
+import { Step4FormValues } from "@/features/alumni/components/FormSteps/Step4Form";
+import { UpdateAlumniDTO } from "@/features/alumni/types/AlumniDTO";
+import { JurusanPicker } from "@/features/jurusan/components/JurusanPicker";
+import { formatDateToMySQLDateTime } from "@/helper/date";
+import { theme } from "@/theme";
+import { FontAwesome5 } from "@expo/vector-icons";
+import Checkbox from "expo-checkbox";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
+import { Controller, RegisterOptions, SubmitHandler, useForm } from "react-hook-form";
+import { ActivityIndicator, ScrollView } from "react-native";
+import Toast from "react-native-toast-message";
+
+type FormValues = Step1FormValues & Step2FormValues & Step3FormValues & Step4FormValues;
+
 export default function AlumniDetailPage() {
-	// const { id } = useLocalSearchParams();
-	// const { data, isFetching } = useQuery({
-	// 	queryKey: ["alumnis", id],
-	// 	queryFn: () => getDetailAlumni(id as string),
-	// });
-	// return (
-	// 	<Container>
-	// 		<Appbar title="Alumni Detail" />
-	// 		{isFetching ? (
-	// 			<ActivityIndicator />
-	// 		) : (
-	// 			<Padding>
-	// 				<Card style={{ paddingHorizontal: 0, boxShadow: theme.shadows.sm }}>
-	// 					<AlumniDetailGroup text="Biodata">
-	// 						<AlumniDetailItem text1="Nama" text2={data?.data.nama} />
-	// 						<AlumniDetailItem text1="Tanggal Lahir" text2={data?.data.tgl_lahir} />
-	// 						<AlumniDetailItem
-	// 							text1="Angkatan"
-	// 							text2={data?.data.tahun_mulai + " - " + data?.data.tahun_lulus}
-	// 						/>
-	// 					</AlumniDetailGroup>
-	// 					<AlumniDetailGroup text="Kontak">
-	// 						<AlumniDetailItem text1="Nomor Telepon" text2={data?.data.no_tlp} />
-	// 						<AlumniDetailItem text1="Email" text2={data?.data.email} />
-	// 						<AlumniDetailItem text1="Alamat" text2={data?.data.alamat} />
-	// 					</AlumniDetailGroup>
-	// 					<AlumniDetailGroup text="Perkuliahan">
-	// 						<AlumniDetailItem text1="Nama Perguruan Tinggi" text2={data?.data.tempat_kuliah} />
-	// 						<AlumniDetailItem text1="Program Studi" text2={data?.data.prodi_kuliah} />
-	// 					</AlumniDetailGroup>
-	// 					<AlumniDetailGroup text="Pekerjaan">
-	// 						<AlumniDetailItem text1="Tempat Kerja" text2={data?.data.tempat_kerja} />
-	// 						<AlumniDetailItem text1="Jabatan" text2={data?.data.jabatan_kerja} />
-	// 					</AlumniDetailGroup>
-	// 				</Card>
-	// 			</Padding>
-	// 		)}
-	// 	</Container>
-	// );
+	const { id } = useLocalSearchParams();
+	const [isLoading, setIsLoading] = useState(true);
+	const form = useForm<FormValues>();
+	useEffect(() => {
+		fetchDetail();
+	}, []);
+
+	const validation = {
+		required: {
+			value: true,
+			message: "Tidak boleh kosong",
+		},
+	} satisfies RegisterOptions;
+
+	const fetchDetail = async () => {
+		const res = await getDetailAlumni(id);
+		const alumni = {
+			...res.data,
+			tgl_lahir: new Date(res.data?.tgl_lahir!),
+			jurusan_id: res.data?.jurusan.id!,
+		};
+		form.reset(alumni as FormValues);
+		setIsLoading(false);
+	};
+
+	const onUpdate: SubmitHandler<FormValues> = async (data) => {
+		console.log(data);
+		const dto: UpdateAlumniDTO = {
+			...data,
+			tgl_lahir: formatDateToMySQLDateTime(data.tgl_lahir),
+		};
+		const res = await updateAlumni(parseInt(id as string), dto);
+
+		if (res?.status === "fail") {
+			Toast.show({
+				type: "error",
+				text1: res.message,
+			});
+			return;
+		}
+
+		const alumni = {
+			...res?.data,
+			tgl_lahir: new Date(res?.data?.tgl_lahir!),
+			jurusan_id: res?.data?.jurusan.id!,
+		};
+		Toast.show({
+			text1: res?.message,
+		});
+		form.reset(alumni as FormValues);
+	};
+
+	return (
+		<Container>
+			<Appbar
+				title="Alumni Detail"
+				action={
+					<Button
+						onPress={form.handleSubmit(onUpdate)}
+						trailing={<FontAwesome5 name="save" color="white" size={15} />}
+					>
+						Save
+					</Button>
+				}
+			/>
+			{isLoading ? (
+				<ActivityIndicator size={"large"} />
+			) : (
+				<ScrollView style={{ flex: 1 }}>
+					<Padding flexGap={15}>
+						<Card style={{ boxShadow: theme.shadows.sm, gap: 12 }}>
+							<Text style={{ fontSize: 23, marginBottom: 10, fontWeight: 600 }}>Biodata</Text>
+							<Controller
+								control={form.control}
+								name="nama"
+								rules={validation}
+								render={({ field: { value, onChange } }) => (
+									<TextInput
+										label="Nama"
+										value={value}
+										onChangeText={onChange}
+										errorMessage={form.formState.errors.nama?.message}
+									/>
+								)}
+							/>
+							<Controller
+								control={form.control}
+								name="tgl_lahir"
+								rules={validation}
+								render={({ field: { value, onChange } }) => (
+									<DateInput
+										label="Tanggal Lahir"
+										value={value}
+										onChangeDate={(date) => {
+											onChange(date);
+										}}
+										errorMessage={form.formState.errors.nama?.message}
+									/>
+								)}
+							/>
+							<Row gap={15}>
+								<Controller
+									control={form.control}
+									name="tahun_mulai"
+									rules={validation}
+									render={({ field: { value, onChange } }) => (
+										<TextInput
+											keyboardType="numeric"
+											label="Tahun Masuk"
+											containerStyle={{ flex: 1 }}
+											value={value}
+											onChangeText={onChange}
+											errorMessage={form.formState.errors.tahun_mulai?.message}
+										/>
+									)}
+								/>
+								<Controller
+									control={form.control}
+									name="tahun_lulus"
+									rules={validation}
+									render={({ field: { value, onChange } }) => (
+										<TextInput
+											keyboardType="numeric"
+											label="Tahun Lulus"
+											containerStyle={{ flex: 1 }}
+											value={value}
+											onChangeText={onChange}
+											errorMessage={form.formState.errors.tahun_lulus?.message}
+										/>
+									)}
+								/>
+							</Row>
+							<Controller
+								control={form.control}
+								name="jurusan_id"
+								rules={validation}
+								render={({ field: { value, onChange } }) => (
+									<InputWrapper
+										label="Jurusan"
+										enableBorder
+										errorMessage={form.formState.errors.jurusan_id?.message}
+									>
+										<JurusanPicker value={value} onChange={onChange} />
+									</InputWrapper>
+								)}
+							/>
+						</Card>
+						<Card style={{ boxShadow: theme.shadows.sm, gap: 12 }}>
+							<Text style={{ fontSize: 23, marginBottom: 10, fontWeight: 600 }}>Kontak</Text>
+							<Controller
+								control={form.control}
+								name="no_tlp"
+								rules={validation}
+								render={({ field: { value, onChange } }) => (
+									<TextInput
+										keyboardType="phone-pad"
+										label="Nomor Telepon"
+										value={value}
+										onChangeText={onChange}
+										errorMessage={form.formState.errors.no_tlp?.message}
+									/>
+								)}
+							/>
+							<Controller
+								control={form.control}
+								name="email"
+								rules={{
+									...validation,
+									pattern: {
+										value: /^\S+@\S+$/i,
+										message: "Email tidak valid",
+									},
+								}}
+								render={({ field: { value, onChange } }) => (
+									<TextInput
+										keyboardType="email-address"
+										label="Email"
+										value={value}
+										onChangeText={onChange}
+										errorMessage={form.formState.errors.email?.message}
+									/>
+								)}
+							/>
+							<Controller
+								control={form.control}
+								name="alamat"
+								rules={validation}
+								render={({ field: { value, onChange } }) => (
+									<TextInput
+										label="Alamat"
+										value={value}
+										onChangeText={onChange}
+										errorMessage={form.formState.errors.alamat?.message}
+									/>
+								)}
+							/>
+						</Card>
+						<Card style={{ boxShadow: theme.shadows.sm, gap: 12 }}>
+							<Text style={{ fontSize: 23, marginBottom: 10, fontWeight: 600 }}>Perkuliahan</Text>
+							<Controller
+								control={form.control}
+								name="tempat_kuliah"
+								render={({ field: { value, onChange } }) => (
+									<TextInput
+										label="Tempat Kuliah"
+										value={value}
+										onChangeText={onChange}
+										errorMessage={form.formState.errors.tempat_kuliah?.message}
+									/>
+								)}
+							/>
+							<Controller
+								control={form.control}
+								name="prodi_kuliah"
+								render={({ field: { value, onChange } }) => (
+									<TextInput
+										label="Prodi Kuliah"
+										value={value}
+										onChangeText={onChange}
+										errorMessage={form.formState.errors.prodi_kuliah?.message}
+									/>
+								)}
+							/>
+							<Controller
+								control={form.control}
+								name="kesesuaian_kuliah"
+								render={() => (
+									<InputWrapper label="Kesesuaian Kuliah">
+										<Checkbox
+											value={form.getValues("kesesuaian_kuliah")}
+											onValueChange={(val) => form.setValue("kesesuaian_kuliah", val as any)}
+											color={
+												form.getValues("kesesuaian_kuliah") ? theme.colors.primary : undefined
+											}
+										/>
+									</InputWrapper>
+								)}
+							/>
+						</Card>
+						<Card style={{ boxShadow: theme.shadows.sm, gap: 12 }}>
+							<Text style={{ fontSize: 23, marginBottom: 10, fontWeight: 600 }}>Pekerjaan</Text>
+							<Controller
+								control={form.control}
+								name="tempat_kerja"
+								render={({ field: { value, onChange } }) => (
+									<TextInput
+										label="Tempat Kerja"
+										value={value}
+										onChangeText={onChange}
+										errorMessage={form.formState.errors.tempat_kerja?.message}
+									/>
+								)}
+							/>
+							<Controller
+								control={form.control}
+								name="jabatan_kerja"
+								render={({ field: { value, onChange } }) => (
+									<TextInput
+										label="Jabatan"
+										value={value}
+										onChangeText={onChange}
+										errorMessage={form.formState.errors.jabatan_kerja?.message}
+									/>
+								)}
+							/>
+							<Controller
+								control={form.control}
+								name="kesesuaian_kerja"
+								render={() => (
+									<InputWrapper label="Kesesuaian Kerja">
+										<Checkbox
+											value={form.getValues("kesesuaian_kerja")}
+											onValueChange={(val) => form.setValue("kesesuaian_kerja", val as any)}
+											color={
+												form.getValues("kesesuaian_kerja") ? theme.colors.primary : undefined
+											}
+										/>
+									</InputWrapper>
+								)}
+							/>
+						</Card>
+					</Padding>
+				</ScrollView>
+			)}
+		</Container>
+	);
 }

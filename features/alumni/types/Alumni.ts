@@ -7,7 +7,11 @@ export type Alumni = {
 	no_tlp: string;
 	email: string;
 	alamat: string;
-	jurusan: string;
+	jurusan: {
+		id: number;
+		nama: string;
+		tgl_berdiri: string;
+	};
 	tempat_kerja: string | null;
 	jabatan_kerja: string | null;
 	tempat_kuliah: string | null;

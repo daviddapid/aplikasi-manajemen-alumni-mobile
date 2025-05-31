@@ -16,10 +16,7 @@ export type Step1FormValues = {
 	tgl_lahir: Date;
 	tahun_mulai: string;
 	tahun_lulus: string;
-	no_tlp: string;
-	email: string;
-	alamat: string;
-	jurusan_id: string;
+	jurusan_id: number;
 };
 type StepForm1 = {
 	form: UseFormReturn<Step1FormValues>;
@@ -101,7 +98,7 @@ export const Step1Form = ({ form, validation, stepsRef, currentStep }: StepForm1
 							enableBorder
 							errorMessage={form.formState.errors.jurusan_id?.message}
 						>
-							<JurusanPicker onChange={onChange} />
+							<JurusanPicker value={value} onChange={onChange} />
 						</InputWrapper>
 					)}
 				/>

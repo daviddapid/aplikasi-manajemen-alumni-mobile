@@ -1,11 +1,13 @@
 import { theme } from "@/theme";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
+import { ReactNode } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text } from "./Text";
 
 type Props = {
 	title?: string;
+	action?: ReactNode;
 };
 
 export const Appbar = (props: Props) => {
@@ -15,6 +17,7 @@ export const Appbar = (props: Props) => {
 				<AntDesign name="arrowleft" size={25} />
 			</TouchableOpacity>
 			{props.title && <Text style={styles.title}>{props.title}</Text>}
+			{props.action && props.action}
 		</View>
 	);
 };
@@ -27,6 +30,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		position: "relative",
+		justifyContent: "space-between",
 		boxShadow: theme.shadows.sm,
 		zIndex: 3,
 	},

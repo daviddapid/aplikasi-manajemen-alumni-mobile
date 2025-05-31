@@ -12,7 +12,7 @@ import { router } from "expo-router";
 import PagerView from "react-native-pager-view";
 import Toast from "react-native-toast-message";
 import { createAlumni } from "../api/alumni-api";
-import { CreateAlumniDTO } from "../types/CreateAlumniDTO";
+import { CreateAlumniDTO } from "../types/AlumniDTO";
 import { Step1Form, Step1FormValues } from "./FormSteps/Step1Form";
 import { Step2Form, Step2FormValues } from "./FormSteps/Step2Form";
 import { Step3Form, Step3FormValues } from "./FormSteps/Step3Form";
@@ -58,8 +58,6 @@ export const FormCreateAlumni = () => {
 		});
 
 		return router.replace("/auth/alumni");
-
-		// createAlumni(dto);
 	};
 
 	return (

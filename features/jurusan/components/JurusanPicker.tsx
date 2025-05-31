@@ -3,6 +3,7 @@ import { ActivityIndicator } from "react-native";
 import { useJurusan } from "../hooks/useJurusan";
 
 type Props = {
+	value: number;
 	onChange: (val: number) => void;
 };
 
@@ -14,7 +15,7 @@ export const JurusanPicker = (props: Props) => {
 	}
 
 	return (
-		<Picker onValueChange={(val) => props.onChange(val as number)}>
+		<Picker selectedValue={props.value} onValueChange={(val) => props.onChange(val as number)}>
 			<Picker.Item style={{ fontSize: 14 }} label={"---pilih jurusan---"} value={undefined} enabled={false} />
 			{jurusans?.map((val, idx) => (
 				<Picker.Item key={`jurusan-picker-${idx}`} style={{ fontSize: 14 }} label={val.nama} value={val.id} />
