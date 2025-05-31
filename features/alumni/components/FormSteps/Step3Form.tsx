@@ -29,23 +29,32 @@ export const Step3Form = ({ form, stepsRef, currentStep }: StepForm) => {
 				<Controller
 					control={form.control}
 					name="tempat_kuliah"
-					render={() => <TextInput label="Tempat Kuliah" />}
+					render={({ field: { value, onChange } }) => (
+						<TextInput
+							label="Tempat Kuliah"
+							value={value}
+							onChangeText={onChange}
+							errorMessage={form.formState.errors.tempat_kuliah?.message}
+						/>
+					)}
 				/>
 				<Controller
 					control={form.control}
 					name="prodi_kuliah"
-					render={() => <TextInput label="Program Studi" />}
-				/>
-				<Controller
-					control={form.control}
-					name="kesesuaian_kuliah"
-					render={() => <TextInput label="Kesesuaian Kerja" />}
+					render={({ field: { value, onChange } }) => (
+						<TextInput
+							label="Prodi Kuliah"
+							value={value}
+							onChangeText={onChange}
+							errorMessage={form.formState.errors.prodi_kuliah?.message}
+						/>
+					)}
 				/>
 				<Controller
 					control={form.control}
 					name="kesesuaian_kuliah"
 					render={() => (
-						<InputWrapper label="Kesesuaian Kerja">
+						<InputWrapper label="Kesesuaian Kuliah">
 							<Checkbox
 								value={form.getValues("kesesuaian_kuliah")}
 								onValueChange={(val) => form.setValue("kesesuaian_kuliah", val as any)}
