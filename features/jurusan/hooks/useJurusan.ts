@@ -64,6 +64,7 @@ export const useJurusan = () => {
 			await createJurusan({ nama: nama.val, tglBerdiri: tglBerdiri.val });
 			setNama({});
 			setTglBerdiri({});
+			fetchJurusans();
 			onSuccess();
 		} catch (error: any) {
 			console.log(error.response);

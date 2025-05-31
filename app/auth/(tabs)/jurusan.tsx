@@ -21,8 +21,6 @@ export default function JurusanPage() {
 		search,
 		setSearch,
 		isLoading,
-		isFetchingMore,
-		fetchMore,
 		isDebouncing,
 		nama,
 		setNama,
