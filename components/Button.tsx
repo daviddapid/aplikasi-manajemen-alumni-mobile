@@ -1,6 +1,6 @@
 import { theme } from "@/theme";
 import { JSX, useCallback } from "react";
-import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { ActivityIndicator, StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { Text } from "./Text";
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
 	className?: string;
 	onPress?: () => void;
 	style?: StyleProp<ViewStyle>;
+	isLoading?: boolean;
 };
 
 export const Button = ({ variant = "primary", ...props }: Props) => {
@@ -39,9 +40,17 @@ export const Button = ({ variant = "primary", ...props }: Props) => {
 	}, [variant]);
 
 	return (
-		<TouchableOpacity onPress={props.onPress} style={[styles.btn, { backgroundColor: getBgColor() }, props.style]}>
+		<TouchableOpacity
+			disabled={props.isLoading}
+			onPress={props.onPress}
+			style={[styles.btn, { backgroundColor: getBgColor() }, props.style]}
+		>
 			{props.leading}
-			<Text style={[styles.text, { color: getTextColor() }]}>{props.children}</Text>
+			{props.isLoading ? (
+				<ActivityIndicator color={"white"} style={{ marginHorizontal: "auto" }} />
+			) : (
+				<Text style={[styles.text, { color: getTextColor() }]}>{props.children}</Text>
+			)}
 			{props.trailing}
 		</TouchableOpacity>
 	);

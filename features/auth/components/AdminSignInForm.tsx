@@ -2,26 +2,42 @@ import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Text } from "@/components/Text";
 import { TextInput } from "@/components/TextInput";
+import { Api } from "@/config/api";
 import { theme } from "@/theme";
+import { Response } from "@/types/Response";
 import { router } from "expo-router";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
+
+// list input yang dibutuhkan oleh form
+type FormValues = {
+	username: string;
+	password: string;
+};
 
 export const AdminSignInForm = () => {
+	// react-hook-forms
+	// hooks untuk menentukan form input & validasi apa aja
 	const {
 		control,
 		handleSubmit,
-		formState: { errors },
-	} = useForm({
-		defaultValues: {
-			username: "",
-			password: "",
-		},
-	});
+		formState: { errors, isSubmitting },
+	} = useForm<FormValues>();
 
-	async function onSignIn() {
+	// function yang akan dipanggil ketika button sign-in di klik
+	const onSignIn: SubmitHandler<FormValues> = async (form) => {
+		const { data } = await Api.post<Response>("admin/login", form);
+		if (data.status === "fail") {
+			Toast.show({
+				text1: data.message,
+				type: "error",
+			});
+			return;
+		}
+
 		router.replace("/auth/alumni");
-	}
+	};
 
 	return (
 		<Card style={styles.card}>
@@ -58,7 +74,9 @@ export const AdminSignInForm = () => {
 					)}
 				/>
 			</View>
-			<Button onPress={handleSubmit(onSignIn)}>Sign In</Button>
+			<Button onPress={handleSubmit(onSignIn)} isLoading={isSubmitting}>
+				Sign In
+			</Button>
 		</Card>
 	);
 };
@@ -67,7 +85,6 @@ const styles = StyleSheet.create({
 	card: {
 		width: "100%",
 		marginHorizontal: "auto",
-		marginVertical: "auto",
 		paddingVertical: 20,
 		boxShadow: theme.shadows.sm,
 	},

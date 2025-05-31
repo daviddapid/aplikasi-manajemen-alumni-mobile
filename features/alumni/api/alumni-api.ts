@@ -1,8 +1,9 @@
 import { Api } from "@/config/api";
-import { Links, Meta } from "@/types/pagination";
+import { Response } from "@/types/Response";
 import { Alumni } from "../types/Alumni";
+import { CreateAlumniDTO } from "../types/CreateAlumniDTO";
 
-type GetAllAlumnis = { data: Alumni[] } & Links & Meta;
+type GetAllAlumnis = Response<Alumni[]>;
 export async function getAllAlumnis({
 	search,
 	tahunMulai,
@@ -16,18 +17,16 @@ export async function getAllAlumnis({
 }) {
 	try {
 		const query = new URLSearchParams();
-		if (cursor) query.append("cursor", cursor);
 		if (search) query.append("search", search);
 		if (tahunMulai) query.append("tahun_mulai", tahunMulai);
 		if (tahunLulus) query.append("tahun_lulus", tahunLulus);
 
-		const { data } = await Api.get<GetAllAlumnis>(`alumnis?${query.toString()}`);
+		const endpoint = cursor ? `${cursor}&${query.toString()}` : `alumnis?${query.toString()}`;
+		const { data } = await Api.get<GetAllAlumnis>(endpoint);
 
 		return data;
-	} catch (error: any) {
-		console.error(error);
-		console.error(error.response);
-		throw error;
+	} catch (error) {
+		console.log(error);
 	}
 }
 
@@ -40,5 +39,24 @@ export async function getDetailAlumni(id: number | string) {
 	} catch (error) {
 		console.error(error);
 		throw error;
+	}
+}
+
+export async function checkEmailExist(email: string) {
+	try {
+		const { data } = await Api.post("check-email-exist", { email });
+		console.log(data);
+
+		return data;
+	} catch (error: any) {
+		console.log(error.response);
+	}
+}
+
+export async function createAlumni(createAlumniDTO: CreateAlumniDTO) {
+	try {
+		await Api.post("alumnis", createAlumniDTO);
+	} catch (error) {
+		console.log({ error });
 	}
 }

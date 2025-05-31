@@ -1,13 +1,14 @@
 import { useDebounce } from "@/hooks/useDebounce";
-import { Links, Meta } from "@/types/pagination";
+import { Pagination } from "@/types/Response";
 import { useEffect, useState } from "react";
+import Toast from "react-native-toast-message";
 import { getAllAlumnis } from "../api/alumni-api";
 import { Alumni } from "../types/Alumni";
 
 export const useAlumnis = () => {
 	const [alumnis, setAlumnis] = useState<Alumni[]>();
 	const [loading, setLoading] = useState(true);
-	const [paginator, setPaginator] = useState<Meta & Links>();
+	const [paginator, setPaginator] = useState<Pagination>();
 	const [isFetchingMore, setIsFetchingMore] = useState(false);
 	const [query, setQuery] = useState<{ search?: string; tahunMulai?: string; tahunLulus?: string }>();
 	const { debouncedValue: debouncedQuery, isDebouncing } = useDebounce(query, 1000);
@@ -17,33 +18,36 @@ export const useAlumnis = () => {
 	}, [debouncedQuery]);
 
 	async function fetchAlumnis() {
+		setLoading(true);
 		try {
-			setLoading(true);
-			const { data, meta, links } = await getAllAlumnis({ ...debouncedQuery });
-
-			setAlumnis(data);
-			setPaginator({ meta, links });
+			const res = await getAllAlumnis({ ...debouncedQuery });
+			if (res?.status === "fail") {
+				Toast.show({
+					type: "error",
+					text1: res.message,
+				});
+				return;
+			} else {
+				setAlumnis(res?.data);
+				setPaginator(res?.pagination);
+			}
+			setLoading(false);
 		} catch (error) {
 			console.log(error);
-		} finally {
-			setLoading(false);
 		}
 	}
 
 	async function loadMore() {
-		try {
-			if (paginator?.meta.next_cursor && !isFetchingMore) {
-				setIsFetchingMore(true);
-				const { data, links, meta } = await getAllAlumnis({
-					cursor: paginator?.meta.next_cursor,
-					...debouncedQuery,
-				});
-				setAlumnis((prev) => [...prev!, ...data]);
-				setPaginator({ meta, links });
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
+		console.log(paginator);
+
+		if (paginator?.next_page_url && !isFetchingMore) {
+			setIsFetchingMore(true);
+			const res = await getAllAlumnis({
+				cursor: paginator?.next_page_url,
+				...debouncedQuery,
+			});
+			setAlumnis((prev) => [...prev!, ...res?.data!]);
+			setPaginator(res?.pagination);
 			setIsFetchingMore(false);
 		}
 	}

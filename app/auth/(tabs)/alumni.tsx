@@ -24,13 +24,13 @@ export default function IndexPage() {
 			<Card style={{ borderRadius: 0, boxShadow: theme.shadows.sm, zIndex: 2, paddingHorizontal: 0 }}>
 				<Row gap={8} enableScroll style={{ paddingHorizontal: 15 }}>
 					<Button
-						onPress={() => router.push("/create")}
+						onPress={() => router.push("/auth/create")}
 						trailing={<Entypo name="plus" color={"white"} size={15} />}
 					>
 						Tambah Alumni
 					</Button>
 					<Button
-						onPress={() => router.push("/chart")}
+						onPress={() => router.push("/auth/chart")}
 						variant="secondary"
 						trailing={<Entypo name="pie-chart" color={"white"} size={15} />}
 					>
@@ -71,6 +71,7 @@ export default function IndexPage() {
 				onRefresh={fetchAlumnis}
 				onEndReached={loadMore}
 				refreshing={loading}
+				style={{ flex: 1 }}
 				contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 14 }}
 				data={alumnis}
 				ItemSeparatorComponent={() => <Spacing vertical={4} />}

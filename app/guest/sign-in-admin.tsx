@@ -2,6 +2,7 @@ import { ArrowBack } from "@/components/ArrowBack";
 import { Container } from "@/components/Container";
 import { AdminSignInForm } from "@/features/auth/components/AdminSignInForm";
 import { theme } from "@/theme";
+import { KeyboardAvoidingView } from "react-native";
 
 export default function SigninPage() {
 	return (
@@ -13,7 +14,9 @@ export default function SigninPage() {
 			}}
 		>
 			<ArrowBack />
-			<AdminSignInForm />
+			<KeyboardAvoidingView style={{ flex: 1, justifyContent: "center" }} behavior="padding">
+				<AdminSignInForm />
+			</KeyboardAvoidingView>
 		</Container>
 	);
 }

@@ -15,7 +15,7 @@ export const AlumniCard = ({ alumni }: Props) => {
 	const info = useMemo(() => alumni.tempat_kerja ?? alumni.tempat_kuliah, [alumni]);
 
 	return (
-		<TouchableOpacity onPress={() => router.push(`/detail/${alumni.id}`)}>
+		<TouchableOpacity onPress={() => router.push(`/auth/detail/${alumni.id}`)}>
 			<Card style={styles.card}>
 				<Image style={styles.avatar} />
 				<View>
