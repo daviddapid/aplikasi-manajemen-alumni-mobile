@@ -1,5 +1,5 @@
 import { useDebounce } from "@/hooks/useDebounce";
-import { Links, Meta } from "@/types/pagination";
+import { Pagination } from "@/types/Response";
 import { useEffect, useState } from "react";
 import { createJurusan, getAllJurusans } from "../api/jurusan-api";
 import { Jurusan } from "../types/Jurusan";
@@ -9,7 +9,7 @@ export const useJurusan = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isFetchingMore, setIsFetchingMore] = useState(false);
 	const [jurusans, setJurusans] = useState<Jurusan[]>();
-	const [paginator, setPaginator] = useState<Meta & Links>();
+	const [paginator, setPaginator] = useState<Pagination>();
 	const [search, setSearch] = useState<string>();
 	const { debouncedValue, isDebouncing } = useDebounce(search, 1000);
 	const [nama, setNama] = useState<{ val?: string; err?: string }>();
@@ -22,9 +22,9 @@ export const useJurusan = () => {
 	async function fetchJurusans() {
 		try {
 			setRefreshing(true);
-			const { data, meta, links } = await getAllJurusans({ search: debouncedValue });
-			setJurusans(data);
-			setPaginator({ meta, links });
+			const res = await getAllJurusans({ search: debouncedValue });
+			setJurusans(res.data);
+			setPaginator(res.pagination);
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -34,14 +34,14 @@ export const useJurusan = () => {
 
 	async function fetchMore() {
 		try {
-			if (paginator?.meta.next_cursor) {
+			if (paginator?.next_page_url) {
 				setIsFetchingMore(true);
-				const { data, meta, links } = await getAllJurusans({
+				const res = await getAllJurusans({
 					search: debouncedValue,
-					cursor: paginator.meta.next_cursor,
+					cursor: paginator.next_page_url,
 				});
-				setJurusans(data);
-				setPaginator({ meta, links });
+				setJurusans(res.data);
+				setPaginator(res.pagination);
 			}
 		} catch (error) {
 			console.log(error);

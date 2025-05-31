@@ -1,9 +1,9 @@
 import { Api } from "@/config/api";
 import { formatDateToMySQLDateTime } from "@/helper/date";
-import { Links, Meta } from "@/types/pagination";
+import { Response } from "@/types/Response";
 import { Jurusan } from "../types/Jurusan";
 
-type GetAllJurusans = { data: Jurusan[] } & Links & Meta;
+type GetAllJurusans = Response<Jurusan[]>;
 export async function getAllJurusans({
 	search,
 	cursor,
@@ -11,30 +11,20 @@ export async function getAllJurusans({
 	search?: string;
 	cursor?: string;
 }): Promise<GetAllJurusans> {
-	try {
-		const query = new URLSearchParams();
-		if (search) query.append("search", search);
-		if (cursor) query.append("cursor", cursor);
+	const query = new URLSearchParams();
+	if (search) query.append("search", search);
 
-		const { data } = await Api.get<GetAllJurusans>(`jurusans?${query.toString()}`);
-		console.log(data);
-		return data;
-	} catch (error: any) {
-		console.error(error.response);
-		throw error;
-	}
+	const endpoint = cursor ? `${cursor}&${query.toString()}` : `jurusans?${query.toString()}`;
+	const { data } = await Api.get<GetAllJurusans>(endpoint);
+
+	return data;
 }
 
 export async function createJurusan({ nama, tglBerdiri }: { nama: string; tglBerdiri: Date }) {
-	try {
-		const reqBody = {
-			nama,
-			tgl_berdiri: formatDateToMySQLDateTime(tglBerdiri),
-		};
+	const reqBody = {
+		nama,
+		tgl_berdiri: formatDateToMySQLDateTime(tglBerdiri),
+	};
 
-		await Api.post("jurusans", reqBody);
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
+	await Api.post("jurusans", reqBody);
 }
