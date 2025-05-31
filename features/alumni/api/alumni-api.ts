@@ -71,3 +71,13 @@ export async function updateAlumni(id: number, updateAlumniDTO: UpdateAlumniDTO)
 		console.log(error);
 	}
 }
+
+type DeleteAlumni = Response;
+export async function deleteAlumni(id: number) {
+	try {
+		const { data } = await Api.delete<DeleteAlumni>(`alumnis/${id}`);
+		return data;
+	} catch (error) {
+		console.log(error);
+	}
+}

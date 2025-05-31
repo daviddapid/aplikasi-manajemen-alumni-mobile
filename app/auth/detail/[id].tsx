@@ -8,7 +8,7 @@ import { Padding } from "@/components/Padding";
 import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
 import { TextInput } from "@/components/TextInput";
-import { getDetailAlumni, updateAlumni } from "@/features/alumni/api/alumni-api";
+import { deleteAlumni, getDetailAlumni, updateAlumni } from "@/features/alumni/api/alumni-api";
 import { Step1FormValues } from "@/features/alumni/components/FormSteps/Step1Form";
 import { Step2FormValues } from "@/features/alumni/components/FormSteps/Step2Form";
 import { Step3FormValues } from "@/features/alumni/components/FormSteps/Step3Form";
@@ -17,9 +17,9 @@ import { UpdateAlumniDTO } from "@/features/alumni/types/AlumniDTO";
 import { JurusanPicker } from "@/features/jurusan/components/JurusanPicker";
 import { formatDateToMySQLDateTime } from "@/helper/date";
 import { theme } from "@/theme";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Controller, RegisterOptions, SubmitHandler, useForm } from "react-hook-form";
 import { ActivityIndicator, ScrollView } from "react-native";
@@ -30,6 +30,7 @@ type FormValues = Step1FormValues & Step2FormValues & Step3FormValues & Step4For
 export default function AlumniDetailPage() {
 	const { id } = useLocalSearchParams();
 	const [isLoading, setIsLoading] = useState(true);
+	const [isDeleting, setisDeleting] = useState(false);
 	const form = useForm<FormValues>();
 	useEffect(() => {
 		fetchDetail();
@@ -78,6 +79,17 @@ export default function AlumniDetailPage() {
 			text1: res?.message,
 		});
 		form.reset(alumni as FormValues);
+	};
+
+	const handleDelete = async () => {
+		setisDeleting(true);
+		const res = await deleteAlumni(parseInt(id as string));
+		setisDeleting(false);
+		Toast.show({
+			type: "success",
+			text1: res?.message,
+		});
+		router.replace("/auth/alumni");
 	};
 
 	return (
@@ -309,6 +321,15 @@ export default function AlumniDetailPage() {
 								)}
 							/>
 						</Card>
+						<Button
+							variant="danger"
+							style={{ paddingVertical: 15 }}
+							trailing={<MaterialIcons name="delete" color={"white"} size={24} />}
+							onPress={handleDelete}
+							isLoading={isDeleting}
+						>
+							Hapus Data Alumni
+						</Button>
 					</Padding>
 				</ScrollView>
 			)}

@@ -5,7 +5,7 @@ import { Text } from "./Text";
 
 type Props = {
 	children: string;
-	variant?: "primary" | "secondary" | "gray" | "white";
+	variant?: "primary" | "secondary" | "gray" | "white" | "danger";
 	trailing?: JSX.Element;
 	leading?: JSX.Element;
 	className?: string;
@@ -25,16 +25,19 @@ export const Button = ({ variant = "primary", ...props }: Props) => {
 				return theme.colors.gray;
 			case "white":
 				return theme.colors.white;
+			case "danger":
+				return theme.colors.red;
 		}
 	}, [variant]);
 
 	const getTextColor = useCallback(() => {
 		switch (variant) {
 			case "primary":
-				return theme.colors.white;
 			case "secondary":
+			case "danger":
 				return theme.colors.white;
 			case "white":
+			case "gray":
 				return theme.colors.black;
 		}
 	}, [variant]);
