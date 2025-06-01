@@ -1,9 +1,10 @@
 import { Appbar } from "@/components/Appbar";
-import { Button } from "@/components/Button";
+import { Button, OutlineButton } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Container } from "@/components/Container";
 import { DateInput } from "@/components/DateInput";
 import { InputWrapper } from "@/components/InputWrapper";
+import { Modal } from "@/components/Modal";
 import { Padding } from "@/components/Padding";
 import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
@@ -32,6 +33,7 @@ export default function AlumniDetailPage() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isDeleting, setisDeleting] = useState(false);
 	const form = useForm<FormValues>();
+	const [askModalDelete, setAskModalDelete] = useState(false);
 	useEffect(() => {
 		fetchDetail();
 	}, []);
@@ -269,7 +271,7 @@ export default function AlumniDetailPage() {
 								render={() => (
 									<InputWrapper label="Kesesuaian Kuliah">
 										<Checkbox
-											value={form.getValues("kesesuaian_kuliah")}
+											value={form.getValues("kesesuaian_kuliah") ? true : false}
 											onValueChange={(val) => form.setValue("kesesuaian_kuliah", val as any)}
 											color={
 												form.getValues("kesesuaian_kuliah") ? theme.colors.primary : undefined
@@ -311,7 +313,7 @@ export default function AlumniDetailPage() {
 								render={() => (
 									<InputWrapper label="Kesesuaian Kerja">
 										<Checkbox
-											value={form.getValues("kesesuaian_kerja")}
+											value={form.getValues("kesesuaian_kerja") ? true : false}
 											onValueChange={(val) => form.setValue("kesesuaian_kerja", val as any)}
 											color={
 												form.getValues("kesesuaian_kerja") ? theme.colors.primary : undefined
@@ -325,7 +327,7 @@ export default function AlumniDetailPage() {
 							variant="danger"
 							style={{ paddingVertical: 15 }}
 							trailing={<MaterialIcons name="delete" color={"white"} size={24} />}
-							onPress={handleDelete}
+							onPress={() => setAskModalDelete(true)}
 							isLoading={isDeleting}
 						>
 							Hapus Data Alumni
@@ -333,6 +335,26 @@ export default function AlumniDetailPage() {
 					</Padding>
 				</ScrollView>
 			)}
+
+			<Modal title="Konfirmasi" visible={askModalDelete} closeModal={() => setAskModalDelete(false)}>
+				<Text>Apa anda yakin menghapus data alumni ini?</Text>
+				<Row style={{ justifyContent: "flex-end", marginTop: 20 }} gap={5}>
+					<OutlineButton
+						onPress={() => setAskModalDelete(false)}
+						variant="white"
+						style={{ paddingHorizontal: 20, paddingVertical: 10 }}
+					>
+						Batal
+					</OutlineButton>
+					<Button
+						onPress={handleDelete}
+						variant="danger"
+						style={{ paddingHorizontal: 20, paddingVertical: 10 }}
+					>
+						Yakin
+					</Button>
+				</Row>
+			</Modal>
 		</Container>
 	);
 }
