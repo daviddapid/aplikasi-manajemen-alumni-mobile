@@ -1,7 +1,7 @@
 import { Card } from "@/components/Card";
+import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
 import { theme } from "@/theme";
-import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useMemo } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -17,9 +17,27 @@ export const AlumniCard = ({ alumni }: Props) => {
 	return (
 		<TouchableOpacity onPress={() => router.push(`/auth/detail/${alumni.id}`)}>
 			<Card style={styles.card}>
-				<Image style={styles.avatar} />
 				<View>
-					<Text style={{ fontWeight: "bold", fontSize: theme.fontSizes.md }}>{alumni.nama}</Text>
+					<Row style={{ justifyContent: "space-between", width: "100%" }}>
+						<Text style={{ fontWeight: "bold", fontSize: theme.fontSizes.md }}>{alumni.nama}</Text>
+						<Row
+							style={{
+								backgroundColor: theme.colors.softPrimary,
+								justifyContent: "center",
+								borderWidth: 1,
+								borderColor: theme.colors.primary,
+								borderRadius: 8,
+								width: "auto",
+								paddingVertical: 2,
+								paddingHorizontal: 5,
+							}}
+							gap={3}
+						>
+							<Text style={{ fontSize: 12, color: theme.colors.primary }}>{alumni.tahun_mulai}</Text>
+							<Text style={{ fontSize: 12, color: theme.colors.primary }}>-</Text>
+							<Text style={{ fontSize: 12, color: theme.colors.primary }}>{alumni.tahun_lulus}</Text>
+						</Row>
+					</Row>
 					<Text style={{ marginTop: theme.spaces.sm }}>{info ?? "-"}</Text>
 				</View>
 			</Card>
@@ -29,5 +47,4 @@ export const AlumniCard = ({ alumni }: Props) => {
 
 const styles = StyleSheet.create({
 	card: { ...theme.borders.base, flexDirection: "row", gap: 20 },
-	avatar: { width: 50, height: 50, backgroundColor: theme.colors.gray, borderRadius: 50 },
 });

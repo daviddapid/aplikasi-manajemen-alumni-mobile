@@ -5,7 +5,7 @@ import { Text } from "./Text";
 
 type Props = {
 	children: string;
-	variant?: "primary" | "secondary" | "gray" | "white" | "danger";
+	variant?: "primary" | "secondary" | "gray" | "white" | "danger" | "green";
 	trailing?: JSX.Element;
 	leading?: JSX.Element;
 	className?: string;
@@ -27,6 +27,8 @@ export const Button = ({ variant = "primary", ...props }: Props) => {
 				return theme.colors.white;
 			case "danger":
 				return theme.colors.red;
+			case "green":
+				return theme.colors.green;
 		}
 	}, [variant]);
 
@@ -35,6 +37,7 @@ export const Button = ({ variant = "primary", ...props }: Props) => {
 			case "primary":
 			case "secondary":
 			case "danger":
+			case "green":
 				return theme.colors.white;
 			case "white":
 			case "gray":

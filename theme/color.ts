@@ -3,6 +3,7 @@ interface ColorsToken {
 	secondary: string;
 	softPrimary: string;
 	red: string;
+	green: string;
 	gray: string;
 	darkGray: string;
 	white: string;
@@ -18,4 +19,5 @@ export const colors: ColorsToken = {
 	darkGray: "#6C6C6C",
 	softPrimary: "#E8F7FF",
 	black: "#00000",
+	green: "#00a843",
 };

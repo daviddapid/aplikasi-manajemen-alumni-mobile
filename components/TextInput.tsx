@@ -19,6 +19,7 @@ type Props = {
 	inputStyle?: StyleProp<TextStyle>;
 	containerStyle?: StyleProp<ViewStyle>;
 	errorMessage?: string;
+	disable?: boolean;
 };
 
 export const TextInput = (props: Props) => {
@@ -31,6 +32,7 @@ export const TextInput = (props: Props) => {
 				placeholder={props.placeholder}
 				value={props.value}
 				onChangeText={props.onChangeText}
+				editable={!props.disable}
 			/>
 			{props.errorMessage && (
 				<Text style={{ color: theme.colors.red, marginTop: theme.spaces.sm }}>{props.errorMessage}</Text>
