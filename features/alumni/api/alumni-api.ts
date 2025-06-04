@@ -1,6 +1,6 @@
 import { Api } from "@/config/api";
 import { Response } from "@/types/Response";
-import { Alumni } from "../types/Alumni";
+import { Alumni, AlumniChart } from "../types/Alumni";
 import { CreateAlumniDTO, UpdateAlumniDTO } from "../types/AlumniDTO";
 
 type GetAllAlumnis = Response<Alumni[]>;
@@ -76,6 +76,16 @@ type DeleteAlumni = Response;
 export async function deleteAlumni(id: number) {
 	try {
 		const { data } = await Api.delete<DeleteAlumni>(`alumnis/${id}`);
+		return data;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+type GetChartData = Response<AlumniChart>;
+export async function getChartData() {
+	try {
+		const { data } = await Api.get<GetChartData>("alumnis/chart");
 		return data;
 	} catch (error) {
 		console.log(error);

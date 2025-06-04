@@ -27,7 +27,7 @@ export default function IndexPage() {
 		useAlumnis();
 	const [showModalExcel, setShowModalExcel] = useState(false);
 	const [selectedFile, setSelectedFile] = useState<DocumentPicker.DocumentPickerResult | null>(null);
-
+	const [isSubmitingExcel, setIsSubmitingExcel] = useState(false);
 	const fileUrl = process.env.EXPO_PUBLIC_DONWLOAD_URL + "template_import_alumni.xlsx";
 
 	const handleDownload = () => {
@@ -48,17 +48,18 @@ export default function IndexPage() {
 	const handleSubmitExcel = async () => {
 		if (!selectedFile) return;
 
-		const formData = new FormData();
-		if (!selectedFile.assets) {
-			return;
-		}
-		formData.append("alumni_excel", {
-			uri: selectedFile.assets[0].uri,
-			name: selectedFile.assets[0].name,
-			type: selectedFile.assets[0].mimeType,
-		} as any);
-
 		try {
+			setIsSubmitingExcel(true);
+			const formData = new FormData();
+			if (!selectedFile.assets) {
+				return;
+			}
+			formData.append("alumni_excel", {
+				uri: selectedFile.assets[0].uri,
+				name: selectedFile.assets[0].name,
+				type: selectedFile.assets[0].mimeType,
+			} as any);
+
 			const response = await Api.post<Response>("alumnis/import", formData, {
 				headers: {
 					"Content-Type": "multipart/form-data",
@@ -79,6 +80,8 @@ export default function IndexPage() {
 			});
 		} catch (error) {
 			console.error("Upload error:", error);
+		} finally {
+			setIsSubmitingExcel(false);
 		}
 	};
 
@@ -183,7 +186,7 @@ export default function IndexPage() {
 						Reset
 					</Button>
 				</TouchableOpacity>
-				<Button variant="green" onPress={handleSubmitExcel}>
+				<Button variant="green" onPress={handleSubmitExcel} isLoading={isSubmitingExcel}>
 					Submit
 				</Button>
 			</Modal>

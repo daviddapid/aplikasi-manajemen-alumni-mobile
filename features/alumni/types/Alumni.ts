@@ -22,3 +22,17 @@ export type Alumni = {
 	created_at?: Date;
 	updated_at?: Date;
 };
+
+export type AlumniChart = {
+	bar_data: {
+		total_pengangguran: number;
+		total_kuliah: number;
+		total_kerja: number;
+		total_kuliah_dan_kerja: number;
+	};
+	pie_data: {
+		pct_tidak_sesuai: number;
+		pct_kuliah_sesuai: number;
+		pct_kerja_sesuai: number;
+	};
+};

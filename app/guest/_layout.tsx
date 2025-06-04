@@ -13,7 +13,6 @@ export default function GuestLayout() {
 				}}
 			>
 				<Stack.Screen name="register-siswa" />
-				<Stack.Screen name="sign-in-siswa" />
 				<Stack.Screen name="sign-in-admin" />
 			</Stack>
 			<StatusBar backgroundColor={theme.colors.primary} barStyle={"light-content"} />

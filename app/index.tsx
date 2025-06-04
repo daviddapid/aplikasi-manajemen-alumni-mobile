@@ -20,7 +20,7 @@ export default function IndexPage() {
 					<Text style={styles.subtitle}>Kelola data alumni dengan mudah</Text>
 				</View>
 				<View style={{ gap: theme.spaces.lg }}>
-					<Button style={styles.btn} onPress={() => router.push("/guest/sign-in-siswa")}>
+					<Button style={styles.btn} onPress={() => router.push("/guest/register-siswa")}>
 						Masuk Sebagai Siswa
 					</Button>
 					<Button style={styles.btn} variant="white" onPress={() => router.push("/guest/sign-in-admin")}>
