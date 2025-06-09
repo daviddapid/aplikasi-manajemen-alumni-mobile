@@ -50,9 +50,9 @@ export default function AlumniDetailPage() {
 		const alumni = {
 			...res.data,
 			tgl_lahir: new Date(res.data?.tgl_lahir!),
-			jurusan_id: res.data?.jurusan.id!,
+			jurusan_id: res.data?.jurusan?.id,
 		};
-		form.reset(alumni as FormValues);
+		form.reset(alumni as any);
 		setIsLoading(false);
 	};
 
@@ -179,7 +179,7 @@ export default function AlumniDetailPage() {
 											enableBorder
 											errorMessage={form.formState.errors.jurusan_id?.message}
 										>
-											<JurusanPicker value={value} onChange={onChange} />
+											<JurusanPicker value={value ?? undefined} onChange={onChange} />
 										</InputWrapper>
 									)}
 								/>
