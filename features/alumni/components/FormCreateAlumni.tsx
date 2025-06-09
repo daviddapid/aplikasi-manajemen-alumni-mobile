@@ -36,7 +36,17 @@ export const FormCreateAlumni = (props: Props) => {
 		},
 	} satisfies RegisterOptions;
 
+	const getKesesuaian = () => {
+		if (step3.getValues("tempat_kuliah")) {
+			step3.setValue("kesesuaian_kuliah", step3.getValues("kesesuaian_kuliah") ?? false);
+		}
+		if (step4.getValues("tempat_kerja")) {
+			step4.setValue("kesesuaian_kerja", step4.getValues("kesesuaian_kerja") ?? false);
+		}
+	};
+
 	const handleSubmit = async () => {
+		getKesesuaian();
 		const dto: CreateAlumniDTO = {
 			...step1.getValues(),
 			...step2.getValues(),

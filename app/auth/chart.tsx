@@ -6,16 +6,15 @@ import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
 import { getChartData } from "@/features/alumni/api/alumni-api";
 import { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { BarChart, barDataItem, PieChart, pieDataItem } from "react-native-gifted-charts";
 
 export default function ChartPage() {
-	const data: pieDataItem[] = [{ value: 15 }, { value: 30 }, { value: 26 }];
-	const barDataItem: barDataItem[] = [{ value: 10, frontColor: "red" }, { value: 20 }, { value: 20 }, { value: 30 }];
 	const [barData, setBarData] = useState<barDataItem[]>();
 	const [pieData, setPieData] = useState<pieDataItem[]>();
 	const barColor = ["#4E79A7", "#F28E2B", "#59A14F", "#E15759"];
 	const pieColor = ["#F77F00", "#3A86FF", "#D62828"];
+	const [refreshing, setRefreshing] = useState(false);
 
 	useEffect(() => {
 		fetchChartData();
@@ -24,8 +23,8 @@ export default function ChartPage() {
 	const fetchChartData = async () => {
 		const res = await getChartData();
 		const barData: barDataItem[] = [
-			{ value: res?.data?.bar_data.total_kerja, frontColor: barColor[0] },
-			{ value: res?.data?.bar_data.total_kuliah, frontColor: barColor[1] },
+			{ value: res?.data?.bar_data.total_kuliah, frontColor: barColor[0] },
+			{ value: res?.data?.bar_data.total_kerja, frontColor: barColor[1] },
 			{ value: res?.data?.bar_data.total_kuliah_dan_kerja, frontColor: barColor[2] },
 			{ value: res?.data?.bar_data.total_pengangguran, frontColor: barColor[3] },
 		];
@@ -56,7 +55,18 @@ export default function ChartPage() {
 	return (
 		<Container>
 			<Appbar title="Grafik Alumni" />
-			<ScrollView style={{ flex: 1 }}>
+			<ScrollView
+				style={{ flex: 1 }}
+				refreshControl={
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={() => {
+							setRefreshing(true);
+							fetchChartData().then(() => setRefreshing(false));
+						}}
+					/>
+				}
+			>
 				<Padding>
 					<Card>
 						<Text style={{ fontSize: 20, fontWeight: 500, textAlign: "center" }}>Sebaran Alumni</Text>
