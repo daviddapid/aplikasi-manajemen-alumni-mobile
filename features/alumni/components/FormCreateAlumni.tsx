@@ -8,7 +8,6 @@ import { RegisterOptions, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
 import { formatDateToMySQLDateTime } from "@/helper/date";
-import { router } from "expo-router";
 import PagerView from "react-native-pager-view";
 import Toast from "react-native-toast-message";
 import { createAlumni } from "../api/alumni-api";
@@ -18,7 +17,11 @@ import { Step2Form, Step2FormValues } from "./FormSteps/Step2Form";
 import { Step3Form, Step3FormValues } from "./FormSteps/Step3Form";
 import { Step4Form, Step4FormValues } from "./FormSteps/Step4Form";
 
-export const FormCreateAlumni = () => {
+type Props = {
+	onSuccess: () => void;
+};
+
+export const FormCreateAlumni = (props: Props) => {
 	const [currentStep, setCurrentStep] = useState(0);
 	const stepsRef = useRef<PagerView>(null);
 	const step1 = useForm<Step1FormValues>();
@@ -57,7 +60,7 @@ export const FormCreateAlumni = () => {
 			text1: res?.message,
 		});
 
-		return router.replace("/auth/alumni");
+		props.onSuccess();
 	};
 
 	return (
