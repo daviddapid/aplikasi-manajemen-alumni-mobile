@@ -10,6 +10,7 @@ import { getChartData } from "@/features/alumni/api/alumni-api";
 import { useEffect, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import { BarChart, barDataItem, PieChart, pieDataItem } from "react-native-gifted-charts";
+import Toast from "react-native-toast-message";
 
 export default function ChartPage() {
 	const [barData, setBarData] = useState<barDataItem[]>();
@@ -25,6 +26,15 @@ export default function ChartPage() {
 
 	const fetchChartData = async () => {
 		const res = await getChartData(tahunLulus);
+
+		if (res?.status === "fail") {
+			Toast.show({
+				type: "error",
+				text1: res.message,
+			});
+			return;
+		}
+
 		const barData: barDataItem[] = [
 			{ value: res?.data?.bar_data.total_kuliah, frontColor: barColor[0] },
 			{ value: res?.data?.bar_data.total_kerja, frontColor: barColor[1] },
@@ -81,9 +91,9 @@ export default function ChartPage() {
 							<Button
 								style={{ paddingBlock: 12 }}
 								variant="gray"
-								onPress={() => {
+								onPress={async () => {
 									setTahunLulus(undefined);
-									fetchChartData();
+									await fetchChartData();
 								}}
 							>
 								Reset
