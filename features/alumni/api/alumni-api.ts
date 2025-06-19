@@ -83,9 +83,13 @@ export async function deleteAlumni(id: number) {
 }
 
 type GetChartData = Response<AlumniChart>;
-export async function getChartData() {
+export async function getChartData(tahunLulus?: string) {
 	try {
-		const { data } = await Api.get<GetChartData>("alumnis/chart");
+		const query = new URLSearchParams();
+		if (tahunLulus) query.append("tahun_lulus", tahunLulus);
+		console.log(query.toString());
+
+		const { data } = await Api.get<GetChartData>(`alumnis/chart?${query.toString()}`);
 		return data;
 	} catch (error) {
 		console.log(error);

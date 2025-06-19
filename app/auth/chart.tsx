@@ -1,9 +1,11 @@
 import { Appbar } from "@/components/Appbar";
+import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Container } from "@/components/Container";
 import { Padding } from "@/components/Padding";
 import { Row } from "@/components/Row";
 import { Text } from "@/components/Text";
+import { TextInput } from "@/components/TextInput";
 import { getChartData } from "@/features/alumni/api/alumni-api";
 import { useEffect, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
@@ -15,13 +17,14 @@ export default function ChartPage() {
 	const barColor = ["#4E79A7", "#F28E2B", "#59A14F", "#E15759"];
 	const pieColor = ["#F77F00", "#3A86FF", "#D62828"];
 	const [refreshing, setRefreshing] = useState(false);
+	const [tahunLulus, setTahunLulus] = useState<string>();
 
 	useEffect(() => {
 		fetchChartData();
 	}, []);
 
 	const fetchChartData = async () => {
-		const res = await getChartData();
+		const res = await getChartData(tahunLulus);
 		const barData: barDataItem[] = [
 			{ value: res?.data?.bar_data.total_kuliah, frontColor: barColor[0] },
 			{ value: res?.data?.bar_data.total_kerja, frontColor: barColor[1] },
@@ -47,9 +50,6 @@ export default function ChartPage() {
 		];
 		setBarData(barData);
 		setPieData(pieData);
-		// const pieData: pieDataItem[] = [
-		//     {value:}
-		// ]
 	};
 
 	return (
@@ -68,6 +68,31 @@ export default function ChartPage() {
 				}
 			>
 				<Padding>
+					<Card style={{ flexDirection: "row", alignItems: "flex-end", gap: 15, marginBottom: 10 }}>
+						<TextInput
+							label="Tahun Lulus"
+							placeholder="masukkan tahun lulus"
+							keyboardType="numeric"
+							containerStyle={{ flex: 1 }}
+							value={tahunLulus}
+							onChangeText={setTahunLulus}
+						/>
+						<Row gap={5}>
+							<Button
+								style={{ paddingBlock: 12 }}
+								variant="gray"
+								onPress={() => {
+									setTahunLulus(undefined);
+									fetchChartData();
+								}}
+							>
+								Reset
+							</Button>
+							<Button style={{ paddingBlock: 12 }} onPress={fetchChartData}>
+								Filter
+							</Button>
+						</Row>
+					</Card>
 					<Card>
 						<Text style={{ fontSize: 20, fontWeight: 500, textAlign: "center" }}>Sebaran Alumni</Text>
 						<View style={{ alignItems: "center", marginTop: 20 }}>
