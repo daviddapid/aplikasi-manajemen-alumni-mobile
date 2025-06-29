@@ -47,12 +47,16 @@ export default function AlumniDetailPage() {
 
 	const fetchDetail = async () => {
 		const res = await getDetailAlumni(id);
+		console.log(res);
+
 		const alumni = {
 			...res.data,
 			tgl_lahir: new Date(res.data?.tgl_lahir!),
 			jurusan_id: res.data?.jurusan?.id,
 		};
 		form.reset(alumni as any);
+		console.log(form.getValues());
+
 		setIsLoading(false);
 	};
 
@@ -147,7 +151,7 @@ export default function AlumniDetailPage() {
 												keyboardType="numeric"
 												label="Tahun Masuk"
 												containerStyle={{ flex: 1 }}
-												value={value}
+												value={value.toString()}
 												onChangeText={onChange}
 												errorMessage={form.formState.errors.tahun_mulai?.message}
 											/>
@@ -162,7 +166,7 @@ export default function AlumniDetailPage() {
 												keyboardType="numeric"
 												label="Tahun Lulus"
 												containerStyle={{ flex: 1 }}
-												value={value}
+												value={value.toString()}
 												onChangeText={onChange}
 												errorMessage={form.formState.errors.tahun_lulus?.message}
 											/>
