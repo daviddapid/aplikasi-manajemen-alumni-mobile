@@ -119,7 +119,7 @@ export default function ChartPage() {
 					</Card>
 					<Card style={{ marginTop: 20 }}>
 						<Text style={{ fontSize: 20, fontWeight: 500, textAlign: "center" }}>
-							Persentase Kesesuaian Kuliah Alumni
+							Persentase Kesesuaian Alumni
 						</Text>
 						<View style={{ alignItems: "center", marginTop: 20 }}>
 							<PieChart
