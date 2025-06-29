@@ -25,6 +25,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="aplikasimanajemenalumnimobile"/>
+        <data android:scheme="exp+aplikasi-manajemen-alumni-mobile"/>
       </intent-filter>
     </activity>
   </application>

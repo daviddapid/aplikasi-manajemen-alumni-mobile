@@ -86,80 +86,86 @@ export default function IndexPage() {
 	};
 
 	return (
-		<Container>
-			<Card style={{ borderRadius: 0, boxShadow: theme.shadows.sm, zIndex: 2, paddingHorizontal: 0 }}>
-				<Row gap={8} enableScroll style={{ paddingHorizontal: 15 }}>
-					<Button
-						onPress={() => router.push("/auth/create")}
-						trailing={<Entypo name="plus" color={"white"} size={15} />}
-					>
-						Tambah Alumni
-					</Button>
-					<Button
-						onPress={() => router.push("/auth/chart")}
-						variant="secondary"
-						trailing={<Entypo name="pie-chart" color={"white"} size={15} />}
-					>
-						Lihat Grafik
-					</Button>
-					<Button variant="gray" onPress={resetQuery} trailing={<MaterialIcons name="history" size={15} />}>
-						Reset Filter
-					</Button>
-					<Button
-						variant="green"
-						onPress={() => setShowModalExcel(true)}
-						trailing={<MaterialCommunityIcons name="microsoft-excel" size={15} color={"white"} />}
-					>
-						Import
-					</Button>
-				</Row>
-				<View style={{ marginTop: theme.spaces.xl, gap: theme.spaces.md }}>
-					<Text style={{ marginLeft: 15 }}>Cari Alumni</Text>
-					<Row gap={10} enableScroll style={{ paddingHorizontal: 15 }}>
-						<TextInput
-							inputStyle={{ minWidth: 210 }}
-							placeholder="Nama/Tempat Kerja/Kuliah..."
-							onChangeText={(val) => setQuery((prev) => ({ ...prev, search: val }))}
-							value={query?.search}
-						/>
-						<TextInput
-							inputStyle={{ minWidth: 100 }}
-							placeholder="tahun masuk"
-							keyboardType="numeric"
-							onChangeText={(val) => setQuery((prev) => ({ ...prev, tahunMulai: val }))}
-							value={query?.tahunMulai}
-						/>
-						<TextInput
-							inputStyle={{ minWidth: 100 }}
-							placeholder="tahun lulus"
-							keyboardType="numeric"
-							onChangeText={(val) => setQuery((prev) => ({ ...prev, tahunLulus: val }))}
-							value={query?.tahunLulus}
-						/>
+		<>
+			<Container>
+				<Card style={{ borderRadius: 0, boxShadow: theme.shadows.sm, zIndex: 2, paddingHorizontal: 0 }}>
+					<Row gap={8} enableScroll style={{ paddingHorizontal: 15 }}>
+						<Button
+							onPress={() => router.push("/auth/create")}
+							trailing={<Entypo name="plus" color={"white"} size={15} />}
+						>
+							Tambah Alumni
+						</Button>
+						<Button
+							onPress={() => router.push("/auth/chart")}
+							variant="secondary"
+							trailing={<Entypo name="pie-chart" color={"white"} size={15} />}
+						>
+							Lihat Grafik
+						</Button>
+						<Button
+							variant="gray"
+							onPress={resetQuery}
+							trailing={<MaterialIcons name="history" size={15} />}
+						>
+							Reset Filter
+						</Button>
+						<Button
+							variant="green"
+							onPress={() => setShowModalExcel(true)}
+							trailing={<MaterialCommunityIcons name="microsoft-excel" size={15} color={"white"} />}
+						>
+							Import
+						</Button>
 					</Row>
-				</View>
-			</Card>
-			<FlatList
-				initialNumToRender={10}
-				onRefresh={fetchAlumnis}
-				onEndReached={loadMore}
-				refreshing={loading}
-				style={{ flex: 1 }}
-				contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 14 }}
-				data={alumnis}
-				ItemSeparatorComponent={() => <Spacing vertical={4} />}
-				renderItem={({ item }) => <AlumniCard alumni={item} />}
-				ListHeaderComponent={() =>
-					!loading &&
-					isDebouncing && (
-						<Text style={{ marginBottom: spaces.lg, textAlign: "center" }}>sedang mencari...</Text>
-					)
-				}
-				ListFooterComponent={() =>
-					isFetchingMore && <ActivityIndicator color={"black"} style={{ marginTop: spaces.lg }} />
-				}
-				ListEmptyComponent={() => !loading && <Badge text="Tidak ada data" />}
-			/>
+					<View style={{ marginTop: theme.spaces.xl, gap: theme.spaces.md }}>
+						<Text style={{ marginLeft: 15 }}>Cari Alumni</Text>
+						<Row gap={10} enableScroll style={{ paddingHorizontal: 15 }}>
+							<TextInput
+								inputStyle={{ minWidth: 210 }}
+								placeholder="Nama/Tempat Kerja/Kuliah..."
+								onChangeText={(val) => setQuery((prev) => ({ ...prev, search: val }))}
+								value={query?.search}
+							/>
+							<TextInput
+								inputStyle={{ minWidth: 100 }}
+								placeholder="tahun masuk"
+								keyboardType="numeric"
+								onChangeText={(val) => setQuery((prev) => ({ ...prev, tahunMulai: val }))}
+								value={query?.tahunMulai}
+							/>
+							<TextInput
+								inputStyle={{ minWidth: 100 }}
+								placeholder="tahun lulus"
+								keyboardType="numeric"
+								onChangeText={(val) => setQuery((prev) => ({ ...prev, tahunLulus: val }))}
+								value={query?.tahunLulus}
+							/>
+						</Row>
+					</View>
+				</Card>
+				<FlatList
+					initialNumToRender={10}
+					onRefresh={fetchAlumnis}
+					onEndReached={loadMore}
+					refreshing={loading}
+					style={{ flex: 1 }}
+					contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 14 }}
+					data={alumnis}
+					ItemSeparatorComponent={() => <Spacing vertical={4} />}
+					renderItem={({ item }) => <AlumniCard alumni={item} />}
+					ListHeaderComponent={() =>
+						!loading &&
+						isDebouncing && (
+							<Text style={{ marginBottom: spaces.lg, textAlign: "center" }}>sedang mencari...</Text>
+						)
+					}
+					ListFooterComponent={() =>
+						isFetchingMore && <ActivityIndicator color={"black"} style={{ marginTop: spaces.lg }} />
+					}
+					ListEmptyComponent={() => !loading && <Badge text="Tidak ada data" />}
+				/>
+			</Container>
 			<Modal visible={showModalExcel} closeModal={() => setShowModalExcel(false)} title="Import Excel">
 				<Text>Klik link ini untuk donwload template import excel: </Text>
 				<TouchableOpacity onPress={handleDownload}>
@@ -190,6 +196,6 @@ export default function IndexPage() {
 					Submit
 				</Button>
 			</Modal>
-		</Container>
+		</>
 	);
 }
